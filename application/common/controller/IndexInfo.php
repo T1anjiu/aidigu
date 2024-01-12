@@ -145,4 +145,16 @@ class IndexInfo extends Info
         $this->getReminderMsg();
         return $this->fetch();
     }
+
+    public function tools()
+    {
+        $userFans = $this->getMyFans($this->siteUserId, 20);
+        $this->assign('userFans', $userFans);
+        return $this->fetch();
+    }
+
+    public function info()
+    {
+        return $this->fetch();
+    }
 }
