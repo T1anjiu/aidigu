@@ -59,13 +59,15 @@ var chat = {
 		head_image      : "",
 		rds         : [],//所有房间ID
 		crd         : 'a', //当前房间ID
-		remains     : []
+		remains     : [],
+		title       : '',
 	},
 	init : function (){
 		// this.copyright();
 		this.off();
 		// chat.data.storage = window.localStorage;
 		this.ws();
+		this.data.title = window.parent.$(".layui-layer-title").text();
 	},
 	// doLogin : function( name , email ){
 	// 	if(name == '' || email == ''){
@@ -402,6 +404,14 @@ var chat = {
 		}
 	},
 	changeList: function (obj) {
+
+		if ($("#isMobile").val()) {
+			// $("#menu-pannel").css('display', 'none')
+			$("#sub-menu-pannel").show()
+			$("#content-pannel").hide();
+		}
+		window.parent.$(".layui-layer-title").text(chat.data.title);
+
 		var tagid = $(obj).attr("listtagid")
 		if ($(obj).hasClass("selected")) {
 			return
@@ -418,6 +428,24 @@ var chat = {
 		$("#chat-lists").hide();
 		// 默认选中第一个
 		// $("#conv-lists-"+tagid).children().first().trigger('click')
+	},
+	showGroupUser: function(obj) {
+		var groupid = chat.data.groupid
+		if ($("#isMobile").val()) {
+			var areaInfo = ['100%', '100%']
+		} else {
+			var areaInfo =  ['60%', '80%']
+		}
+
+		layer.open({
+            title: '群成员信息:',
+            type: 2,
+            area: areaInfo,
+            content: '/tools/chat/groupFriends?groupid=' + groupid,
+            end: function () {
+              // table.reload('initTable')
+            }
+          });
 	},
 	/**
 	 * 1.初始化房间
@@ -478,6 +506,16 @@ var chat = {
 		$(".input-area").show()
 	},
 	changeUser : function(obj){
+
+		if ($("#isMobile").val()) {
+			// $("#menu-pannel").css('display', 'none')
+			$("#sub-menu-pannel").css('display', 'none')
+			$("#content-pannel").show();
+		}
+
+		$("#showGroupUser").hide();
+
+		window.parent.$(".layui-layer-title").text($(obj).attr("uname"));
 		//未登录
 		// if(!this.data.login) {
 		// 	this.shake();
@@ -516,12 +554,25 @@ var chat = {
 		$(".input-area").show()
 	},
 	changeGroup : function(obj){
+		
+		if ($("#isMobile").val()) {
+			// $("#menu-pannel").css('display', 'none')
+			$("#sub-menu-pannel").css('display', 'none')
+			$("#content-pannel").show();
+		}
+
+		$("#showGroupUser").show();
+
+		window.parent.$(".layui-layer-title").text($(obj).attr("uname"));
+
 		var groupid = $(obj).attr("groupid");
 		var listtagid = $(obj).attr("listtagid");
 		$(".list-item").removeClass("selected")
 		$(obj).addClass('selected')
 		$(obj).children('.layui-badge').css('display', 'none')
 		blinkingTitle.stop(true);
+
+		
 
 		chat.data.groupid = groupid
 		chat.data.listtagid = listtagid

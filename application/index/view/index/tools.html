@@ -7,89 +7,49 @@
 <div class="main">
 	<div class="contents">
 		<div class="top">嘀咕小应用</div>
-		
-		<div class="entry" style="float: left;clear: unset;background: center;">
-			<div class="avatar" style="width: 100px;">
-				<div>
-					<a href="javascript:;" data-title="我的云盘" data-url="/cloud/show/" onclick="showFrameHtml(this, '80%', '80%')">
-						<img src="/static/tools/common/images/cloud.jpg" />
-					</a>
-				</div>
-				<p>
-					<a href="javascript:;" data-title="我的云盘" data-url="/cloud/show/" onclick="showFrameHtml(this, '80%', '80%')">
-						我的云盘
-					</a>
-				</p>
-			</div>
-			<div class="clear"></div>
-		</div>
 
-		<div class="entry" style="float: left;clear: unset;background: center;">
-			<div class="avatar" style="width: 100px;">
-				<div>
-					<a href="javascript:;" data-title="聊天" data-url="/chat" onclick="showFrameHtml(this, '60%', '70%')">
-						<img src="/static/tools/common/images/chat.jpg" />
-					</a>
+		{foreach $list as $appInfo}
+		{if $appInfo['app_type'] == 0 || $appInfo['app_type'] == 1}
+			<div class="entry" style="float: left;clear: unset;background: center;">
+				<div class="avatar" style="width: 100px;">
+					<div>
+						{if $appInfo['open_type'] == 0}
+						<a href="javascript:;" data-title="{$appInfo['app_name']}" data-url="{$appInfo['app_url']}" onclick="showFrameCustom(this, '{$appInfo[\'app_config\']}')">
+							<img src="{$appInfo['app_image']}" />
+						</a>
+						{elseif condition="$appInfo['open_type'] eq 1" /}
+						<a href="{$appInfo['app_url']}">
+							<img src="{$appInfo['app_image']}" />
+						</a>
+						{else /}
+						<a href="{$appInfo['app_url']}" target="_blank">
+							<img src="{$appInfo['app_image']}" />
+						</a>
+						{/if}
+					</div>
+					<p>
+						{if $appInfo['open_type'] == 0}
+						<a href="javascript:;" data-title="{$appInfo['app_name']}" data-url="{$appInfo['app_url']}" onclick="showFrameCustom(this, '{$appInfo[\'app_config\']}')">
+							{$appInfo['app_name']}
+						</a>
+						{elseif condition="$appInfo['open_type'] eq 1" /}
+						<a href="{$appInfo['app_url']}">
+							{$appInfo['app_name']}
+						</a>
+						{else /}
+						<a href="{$appInfo['app_url']}" target="_blank">
+							{$appInfo['app_name']}
+						</a>
+						{/if}
+						{if in_array($appInfo['remind_key'], $chatRemind)}
+						<span class="layui-badge-dot layui-bg-blue"></span>
+						{/if}
+					</p>
 				</div>
-				<p>
-					<a href="javascript:;" data-title="聊天" data-url="/chat" onclick="showFrameHtml(this, '60%', '70%')">
-						嘀友聊天
-					</a>
-					{if $chatRemind}
-					<span class="layui-badge-dot layui-bg-blue"></span>
-					{/if}
-				</p>
+				<div class="clear"></div>
 			</div>
-			<div class="clear"></div>
-		</div>
-
-		<div class="entry" style="float: left;clear: unset;background: center;">
-			<div class="avatar" style="width: 100px;">
-				<div>
-					<a href="javascript:;" data-title="影院" data-url="/tools/movie" onclick="showFrameHtml(this, '80%', '80%')">
-						<img src="/static/tools/common/images/movie.jpg" />
-					</a>
-				</div>
-				<p>
-					<a href="javascript:;" data-title="影院" data-url="/tools/movie" onclick="showFrameHtml(this, '80%', '80%')">
-						嘀咕影院
-					</a>
-				</p>
-			</div>
-			<div class="clear"></div>
-		</div>
-
-		<div class="entry" style="float: left;clear: unset;background: center;">
-			<div class="avatar" style="width: 100px;">
-				<div>
-					<a href="javascript:;" data-title="开车啦" data-url="/tools/onlinecar" onclick="showFrameHtml(this, '80%', '80%')">
-						<img src="/static/tools/common/images/onlinecar.jpg" />
-					</a>
-				</div>
-				<p>
-					<a href="javascript:;" data-title="开车啦" data-url="/tools/onlinecar" onclick="showFrameHtml(this, '80%', '80%')">
-						开车啦
-					</a>
-				</p>
-			</div>
-			<div class="clear"></div>
-		</div>
-
-		<div class="entry" style="float: left;clear: unset;background: center;">
-			<div class="avatar" style="width: 100px;">
-				<div>
-					<a href="javascript:;" data-title="BMI" data-url="/tools/bmi" onclick="showFrameHtml(this, '80%', '80%')">
-						<img src="/static/tools/common/images/bmi.jpg" />
-					</a>
-				</div>
-				<p>
-					<a href="javascript:;" data-title="BMI" data-url="/tools/bmi" onclick="showFrameHtml(this, '80%', '80%')">
-						BMI体重计算
-					</a>
-				</p>
-			</div>
-			<div class="clear"></div>
-		</div>
+		{/if}
+		{/foreach}
 
 	</div>
 {if $userInfo.isSiteUser}

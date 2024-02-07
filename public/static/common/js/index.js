@@ -96,6 +96,38 @@ function showFrameUrl(obj, width, height)
     // });
 }
 
+// 小应用专用
+function showFrameCustom(obj, appConfig)
+{
+    appConfig = JSON.parse(appConfig)
+    layer.open({
+        type: 1,
+        title: appConfig.title,
+        shade: 0.8,
+        closeBtn: appConfig.closeBtn,
+        shadeClose: appConfig.shadeClose,
+        area: appConfig.area,
+        resize: appConfig.config,
+        maxmin: appConfig.maxmin,
+        skin: appConfig.skin,
+        id: appConfig.id,
+        hideOnClose: appConfig.hideOnClose,
+        // moveOut: true,
+        scrollbar: false,
+        content: '<iframe src="'+$(obj).attr('data-url')+'" allowfullscreen="true" allowtransparency="true" width="100%" height="100%" frameborder="0" scrolling="yes"></iframe>',
+        // zIndex: layer.zIndex, //重点1
+        // success: function(layero){
+        //     layer.setTop(layero); //重点2
+        // },
+        // end: function(){ 
+        // } 
+    });
+    $(".layui-layer-content").css("overflow", 'hidden')
+    // layer.style(index, {
+    //     overflow: 'hidden',
+    // });
+}
+
 //字符串转换为时间戳
 function getDateTimeStamp(dateStr) {
     return dateStr + '000'

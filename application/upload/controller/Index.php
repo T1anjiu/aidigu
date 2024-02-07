@@ -26,16 +26,47 @@ class Index extends Controller
 
     public function show()
     {
-        $result = Db::name('file')->where('is_delete', 0)->order('create_time', 'desc')->where('userid', getLoginUid())->paginate(7, false, ['page' => request()->param('page/d', 1), 'path' => '[PAGE].html']);
-        $this->assign('fileList', $result);
+        // $result = Db::name('file')->where('is_delete', 0)->order('create_time', 'desc')->where('userid', getLoginUid())->paginate(7, false, ['page' => request()->param('page/d', 1), 'path' => '[PAGE].html']);
+        // $this->assign('fileList', $result);
         return $this->fetch();
+    }
+
+    public function getFiles()
+    {
+        $get = input('get.');
+        $page = $get['page'] ?? 1;
+        $limit = $get['limit'] ?? 10;
+        $fileName = $get['file_name'] ?? '';
+        $where[] = ['userid', '=', getLoginUid()];
+        if ($fileName) {
+            $where[] = ['file_name', 'like',  '%'.$fileName.'%'];
+        }
+        $count = Db::name('file')->where('is_delete', 0)->where($where)->count();
+        $result = Db::name('file')->where('is_delete', 0)->order('create_time', 'desc')->where($where)->limit($limit)->page($page)->select();
+        return json(['code' => 0, 'data'=> $result, 'count' => $count]);
+    }
+
+    // 回收站
+    public function getCollection()
+    {
+        $get = input('get.');
+        $page = $get['page'] ?? 1;
+        $limit = $get['limit'] ?? 10;
+        $fileName = $get['file_name'] ?? '';
+        $where[] = ['userid', '=', getLoginUid()];
+        if ($fileName) {
+            $where[] = ['file_name', 'like',  '%'.$fileName.'%'];
+        }
+        $count = Db::name('file')->where('is_delete', 1)->where($where)->count();
+        $result = Db::name('file')->where('is_delete', 1)->order('create_time', 'desc')->where($where)->limit($limit)->page($page)->select();
+        return json(['code' => 0, 'data'=> $result, 'count' => $count]);
     }
 
     // 回收站
     public function collection()
     {
-        $result = Db::name('file')->where('is_delete', 1)->order('create_time', 'desc')->where('userid', getLoginUid())->paginate(7, false, ['page' => request()->param('page/d', 1), 'path' => '[PAGE].html']);
-        $this->assign('fileList', $result);
+        // $result = Db::name('file')->where('is_delete', 1)->order('create_time', 'desc')->where('userid', getLoginUid())->paginate(7, false, ['page' => request()->param('page/d', 1), 'path' => '[PAGE].html']);
+        // $this->assign('fileList', $result);
         return $this->fetch();
     }
 
@@ -119,7 +150,7 @@ class Index extends Controller
         $url = input('param.url');
         $title = input('param.title');
         $data['media_info'] = '';
-        $data['content'] = '<p>正在看<a href="javascript:;" data-title="" data-url="'.$url.'" onclick="showFrameUrl(this, \'80%\', \'60%\')">'.$title.'</a></p>';
+        $data['content'] = '<p>#观影分享# 正在看【<a href="javascript:;" data-title="" data-url="'.$url.'" onclick="showFrameUrl(this, \'80%\', \'60%\')">'.$title.'</a>】</p>';
         \app\common\controller\Api::saveMessage($data['content'], $data['media_info']);
         return $this->success('分享成功,请在我的首页中查看！');
     }
